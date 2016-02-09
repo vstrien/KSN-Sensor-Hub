@@ -6,7 +6,9 @@
 #include <ArduinoJson.h>    // ArduinoJson written by Benoit Blanchon. I used 5.0.7.
 #include <Timer.h>          // Timer 1.3 by Jack Christensen / Damian Philipp / Simon Monk
 
-#define DHTPIN0 8     // what digital pin we're connected to
+#define DHTPIN0 9     // what digital pin we're connected to
+#define GREENLEDPIN 6
+#define REDLEDPIN 7
 #undef DEBUGGING
 
 #ifdef DEBUGGING
@@ -67,7 +69,10 @@ void setup() {
   
   t.every(READ_INTERVAL, update_sensors);
 
-  pinMode(2, OUTPUT);
+  pinMode(GREENLEDPIN, OUTPUT);
+  pinMode(REDLEDPIN, OUTPUT);
+
+  digitalWrite(GREENLEDPIN, HIGH);
   
 #ifdef DEBUGGING
   Serial.println("Debug mode is ON!");
@@ -107,14 +112,14 @@ void readHumidity(int sensornr) {
   Serial.println(h);
 #endif
   if(!isnan(h)) {
-    digitalWrite(2, LOW);
+    digitalWrite(REDLEDPIN, LOW);
     sensors[sensornr].currentHumidity = h;
     if(h > sensors[sensornr].maximumHumidity)
       sensors[sensornr].maximumHumidity = h;
     if(h < sensors[sensornr].minimumHumidity or sensors[sensornr].minimumHumidity == 0)
       sensors[sensornr].minimumHumidity = h;
   } else {
-    digitalWrite(2, HIGH);
+    digitalWrite(REDLEDPIN, HIGH);
   }
 }
 
@@ -125,14 +130,14 @@ void readTemperature(int sensornr) {
   Serial.println(f);
 #endif
   if(!isnan(f)) {
-    digitalWrite(2, LOW);
+    digitalWrite(REDLEDPIN, LOW);
     sensors[sensornr].currentTemp = f;
     if(f > sensors[sensornr].maximumTemp)
       sensors[sensornr].maximumTemp = f;
     if(f < sensors[sensornr].minimumTemp)
       sensors[sensornr].minimumTemp = f;
   } else {
-    digitalWrite(2, HIGH);
+    digitalWrite(REDLEDPIN, HIGH);
   }
 }
 
